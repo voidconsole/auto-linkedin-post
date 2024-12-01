@@ -1,38 +1,40 @@
 import os
 import requests
-from PIL import Image
 from io import BytesIO
 
 # API Endpoints
-OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+CLAUDE_API_URL = "https://api.anthropic.com/v1/complete"
 DALL_E_API_URL = "https://api.openai.com/v1/images/generations"
 LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
 
 # Fetch environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
 LINKEDIN_ACCESS_TOKEN = os.getenv("LINKEDIN_ACCESS_TOKEN")
 LINKEDIN_USER_ID = os.getenv("LINKEDIN_USER_ID")
-NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")  # For email notifications
+NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")
 
-if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
+if not all([CLAUDE_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
     raise EnvironmentError("Missing required environment variables.")
 
-# Function to generate post content using OpenAI
+# Function to generate post content using Claude
 def generate_post_content():
-    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-    payload = {
-        "model": "gpt-4",
-        "messages": [
-            {"role": "system", "content": "Generate a LinkedIn post about frontend development or graphic design."}
-        ],
+    headers = {
+        "x-api-key": CLAUDE_API_KEY,
+        "Content-Type": "application/json"
     }
-    response = requests.post(OPENAI_API_URL, headers=headers, json=payload)
+    payload = {
+        "prompt": "\n\nHuman: Generate an engaging LinkedIn post about either frontend development or graphic design, formatted as if it’s ready to post.\n\nAssistant:",
+        "model": "claude-2",
+        "max_tokens_to_sample": 500,
+        "stop_sequences": ["\n\nHuman:"]
+    }
+    response = requests.post(CLAUDE_API_URL, headers=headers, json=payload)
     response.raise_for_status()
-    return response.json()["choices"][0]["message"]["content"]
+    return response.json()["completion"]
 
 # Function to generate an image using DALL-E
 def generate_image(prompt):
-    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+    headers = {"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"}
     payload = {"prompt": prompt, "n": 1, "size": "1024x1024"}
     response = requests.post(DALL_E_API_URL, headers=headers, json=payload)
     response.raise_for_status()
@@ -50,7 +52,7 @@ def post_to_linkedin(content, image_path):
         "Content-Type": "application/json"
     }
     payload = {
-        "author": f"urn:li:person:{os.getenv('LINKEDIN_USER_ID')}",
+        "author": f"urn:li:person:{LINKEDIN_USER_ID}",
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
@@ -72,12 +74,12 @@ def post_to_linkedin(content, image_path):
 
 # Function to notify via email
 def send_email_notification():
-    # Use a library like smtplib to send an email notification
+    # Use a library like smtplib or another service to send an email notification
     print(f"Notification sent to {NOTIFICATION_EMAIL}")
 
 def main():
     try:
-        print("Generating content...")
+        print("Generating content with Claude...")
         content = generate_post_content()
         print("Generating image...")
         image = generate_image(content)
