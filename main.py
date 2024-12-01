@@ -1,6 +1,5 @@
 import os
 import requests
-import json
 from PIL import Image
 from io import BytesIO
 
@@ -12,7 +11,11 @@ LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
 # Fetch environment variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 LINKEDIN_ACCESS_TOKEN = os.getenv("LINKEDIN_ACCESS_TOKEN")
+LINKEDIN_USER_ID = os.getenv("LINKEDIN_USER_ID")
 NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")  # For email notifications
+
+if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
+    raise EnvironmentError("Missing required environment variables.")
 
 # Function to generate post content using OpenAI
 def generate_post_content():
