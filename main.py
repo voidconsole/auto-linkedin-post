@@ -3,30 +3,36 @@ import requests
 from io import BytesIO
 
 # API Endpoints
-CLAUDE_API_URL = "https://api.anthropic.com/v1/complete"
-DALL_E_API_URL = "https://api.openai.com/v1/images/generations"
+OPENAI_API_URL = "https://api.openai.com/v1"
 LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
 
 # Fetch environment variables
-CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 LINKEDIN_ACCESS_TOKEN = os.getenv("LINKEDIN_ACCESS_TOKEN")
 LINKEDIN_USER_ID = os.getenv("LINKEDIN_USER_ID")
 NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")
 
-if not all([CLAUDE_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
+if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
     raise EnvironmentError("Missing required environment variables.")
 
-# Function to generate post content using Claude
+# Function to generate post content using OpenAI
 def generate_post_content():
-    print("Mocking Claude API response for development.")
-    return "This is a mocked LinkedIn post content about frontend development or graphic design."
+    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+    payload = {
+        "model": "text-davinci-003",
+        "prompt": "Generate an engaging LinkedIn post about frontend development or graphic design.",
+        "max_tokens": 300,
+        "temperature": 0.7,
+    }
+    response = requests.post(f"{OPENAI_API_URL}/completions", headers=headers, json=payload)
+    response.raise_for_status()
+    return response.json()["choices"][0]["text"].strip()
 
-
-# Function to generate an image using DALL-E
+# Function to generate an image using OpenAI
 def generate_image(prompt):
-    headers = {"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"}
+    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
     payload = {"prompt": prompt, "n": 1, "size": "1024x1024"}
-    response = requests.post(DALL_E_API_URL, headers=headers, json=payload)
+    response = requests.post(f"{OPENAI_API_URL}/images/generations", headers=headers, json=payload)
     response.raise_for_status()
     image_url = response.json()["data"][0]["url"]
 
@@ -69,7 +75,7 @@ def send_email_notification():
 
 def main():
     try:
-        print("Generating content with Claude...")
+        print("Generating content with OpenAI...")
         content = generate_post_content()
         print("Generating image...")
         image = generate_image(content)
