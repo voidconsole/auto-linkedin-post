@@ -18,21 +18,9 @@ if not all([CLAUDE_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATIO
 
 # Function to generate post content using Claude
 def generate_post_content():
-    headers = {
-        "x-api-key": CLAUDE_API_KEY,
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "prompt": "\n\nHuman: Generate an engaging LinkedIn post about either frontend development or graphic design, formatted as if it’s ready to post.\n\nAssistant:",
-        "model": "claude-2",
-        "max_tokens_to_sample": 300,
-        "stop_sequences": ["\n\nHuman:"]
-    }
-    response = requests.post(CLAUDE_API_URL, headers=headers, json=payload)
-    if response.status_code == 200:
-        return response.json().get("completion", "").strip()
-    else:
-        raise Exception(f"Error from Claude API: {response.status_code} - {response.text}")
+    print("Mocking Claude API response for development.")
+    return "This is a mocked LinkedIn post content about frontend development or graphic design."
+
 
 # Function to generate an image using DALL-E
 def generate_image(prompt):
