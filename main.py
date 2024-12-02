@@ -25,12 +25,14 @@ def generate_post_content():
     payload = {
         "prompt": "\n\nHuman: Generate an engaging LinkedIn post about either frontend development or graphic design, formatted as if it’s ready to post.\n\nAssistant:",
         "model": "claude-2",
-        "max_tokens_to_sample": 500,
+        "max_tokens_to_sample": 300,
         "stop_sequences": ["\n\nHuman:"]
     }
     response = requests.post(CLAUDE_API_URL, headers=headers, json=payload)
-    response.raise_for_status()
-    return response.json()["completion"]
+    if response.status_code == 200:
+        return response.json().get("completion", "").strip()
+    else:
+        raise Exception(f"Error from Claude API: {response.status_code} - {response.text}")
 
 # Function to generate an image using DALL-E
 def generate_image(prompt):
