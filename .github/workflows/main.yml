@@ -2,7 +2,7 @@ name: Schedule LinkedIn Post
 
 on:
   schedule:
-    - cron: "0 9 * * *"  # Adjust this to your desired schedule (UTC timezone)
+    - cron: "0 9 * * *"  # Adjust schedule (UTC timezone)
 
 jobs:
   post-to-linkedin:
@@ -24,7 +24,7 @@ jobs:
       - name: Run script
         run: python main.py
         env:
-          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_USER_ID: ${{ secrets.LINKEDIN_USER_ID }}
           NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
