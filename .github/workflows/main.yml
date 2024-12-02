@@ -3,6 +3,7 @@ name: Schedule LinkedIn Post
 on:
   schedule:
     - cron: "0 9 * * *"  # Adjust schedule (UTC timezone)
+  workflow_dispatch:
 
 jobs:
   post-to-linkedin:
