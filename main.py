@@ -8,7 +8,7 @@ LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
 
 # Fetch environment variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 LINKEDIN_ACCESS_TOKEN = os.getenv("LINKEDIN_ACCESS_TOKEN")
 LINKEDIN_USER_ID = os.getenv("LINKEDIN_USER_ID")
 NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")
@@ -20,9 +20,10 @@ if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATIO
 def generate_post_content():
 
 
-    genai.configure(api_key=GENAI_API_KEY)
+    genai.configure(api_key=f"{GOOGLE_API_KEY}")
     model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content("Explain how AI works")
+    response = model.generate_content("Generate an engaging LinkedIn post about frontend development or graphic design.")
+    print(response.text)
     return response.text
 #     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
 #     payload = {
