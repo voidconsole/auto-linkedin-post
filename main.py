@@ -1,13 +1,14 @@
 import os
 import requests
 from io import BytesIO
-
+import google.generativeai as genai
 # API Endpoints
 OPENAI_API_URL = "https://api.openai.com/v1"
 LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
 
 # Fetch environment variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GENAI_API_KEY = os.getenv("GENAI_API_KEY")
 LINKEDIN_ACCESS_TOKEN = os.getenv("LINKEDIN_ACCESS_TOKEN")
 LINKEDIN_USER_ID = os.getenv("LINKEDIN_USER_ID")
 NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")
@@ -17,16 +18,22 @@ if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATIO
 
 # Function to generate post content using OpenAI
 def generate_post_content():
-    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-    payload = {
-        "model": "gpt-3.5-turbo-instruct",
-        "prompt": "Generate an engaging LinkedIn post about frontend development or graphic design.",
-        "max_tokens": 300,
-        "temperature": 0.7,
-    }
-    response = requests.post(f"{OPENAI_API_URL}/completions", headers=headers, json=payload)
-    response.raise_for_status()
-    return response.json()["choices"][0]["text"].strip()
+
+
+    genai.configure(api_key=GENAI_API_KEY)
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content("Explain how AI works")
+    return response.text
+#     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+#     payload = {
+#         "model": "gpt-3.5-turbo-instruct",
+#         "prompt": "Generate an engaging LinkedIn post about frontend development or graphic design.",
+#         "max_tokens": 300,
+#         "temperature": 0.7,
+#     }
+#     response = requests.post(f"{OPENAI_API_URL}/completions", headers=headers, json=payload)
+#     response.raise_for_status()
+#     return response.json()["choices"][0]["text"].strip()
 
 
 # Function to generate an image using OpenAI
