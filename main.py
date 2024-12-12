@@ -15,7 +15,6 @@ NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")
 if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
     raise EnvironmentError("Missing required environment variables.")
 
-raise EnvironmentError(OPENAI_API_KEY);
 # Function to generate post content using OpenAI
 def generate_post_content():
     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
