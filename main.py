@@ -19,7 +19,7 @@ if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATIO
 def generate_post_content():
     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
     payload = {
-        "model": "text-davinci-003",
+        "model": "gpt-3.5-turbo-instruct",
         "prompt": "Generate an engaging LinkedIn post about frontend development or graphic design.",
         "max_tokens": 300,
         "temperature": 0.7,
@@ -27,6 +27,7 @@ def generate_post_content():
     response = requests.post(f"{OPENAI_API_URL}/completions", headers=headers, json=payload)
     response.raise_for_status()
     return response.json()["choices"][0]["text"].strip()
+
 
 # Function to generate an image using OpenAI
 def generate_image(prompt):
