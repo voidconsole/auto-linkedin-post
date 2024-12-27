@@ -18,13 +18,16 @@ if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATIO
 
 # Function to generate post content using OpenAI
 def generate_post_content():
+    response = MetaAI().prompt(message="Whats the weather in San Francisco today? And what is the date?")
+    return response["message"]
+
+    # genai.configure(api_key=f"{GOOGLE_API_KEY}")
+    # model = genai.GenerativeModel("gemini-1.5-flash")
+    # response = model.generate_content("Generate an engaging LinkedIn post about frontend development or graphic design.")
+    # print(response.text)
+    # return response.text
 
 
-    genai.configure(api_key=f"{GOOGLE_API_KEY}")
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content("Generate an engaging LinkedIn post about frontend development or graphic design.")
-    print(response.text)
-    return response.text
 #     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
 #     payload = {
 #         "model": "gpt-3.5-turbo-instruct",
