@@ -2,6 +2,7 @@ import os
 import requests
 from io import BytesIO
 import google.generativeai as genai
+from meta_ai_api import MetaAI
 # API Endpoints
 OPENAI_API_URL = "https://api.openai.com/v1"
 LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
