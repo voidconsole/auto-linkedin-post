@@ -2,3 +2,4 @@ google.generativeai
 openai
 requests
 Pillow
+meta_ai_api
