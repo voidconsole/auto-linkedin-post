@@ -1,113 +1,119 @@
 import os
 import requests
-from io import BytesIO
-import google.generativeai as genai
-from meta_ai_api import MetaAI
-# API Endpoints
-OPENAI_API_URL = "https://api.openai.com/v1"
-LINKEDIN_API_URL = "https://api.linkedin.com/v2/ugcPosts"
 
-# Fetch environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-LINKEDIN_ACCESS_TOKEN = os.getenv("LINKEDIN_ACCESS_TOKEN")
-LINKEDIN_USER_ID = os.getenv("LINKEDIN_USER_ID")
-NOTIFICATION_EMAIL = os.getenv("NOTIFICATION_EMAIL")
+PROMPT = f"{os.environ.get('PROMPT')}"
+API_KEY = f"{os.environ.get('GOOGLE_API_KEY')}"
+CLIENT_ID = f"{os.environ.get('LINKEDIN_CLIENT_ID')}"
+CLIENT_SECRET = f"{os.environ.get('LINKEDIN_CLIENT_SECRET')}"
+ACCESS_TOKEN = f"{os.environ.get('LINKEDIN_ACCESS_TOKEN')}"
+url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 
-if not all([OPENAI_API_KEY, LINKEDIN_ACCESS_TOKEN, LINKEDIN_USER_ID, NOTIFICATION_EMAIL]):
-    raise EnvironmentError("Missing required environment variables.")
+def get_ai_data(prompt):
+	payload = {
+	"contents": [
+		{
+		"parts": [
+			{
+			"text":  prompt
+			}
+		]
+		}
+	]
+	}
+	# Headers
+	headers = {
+	"Content-Type": "application/json"
+	}
 
-# Function to generate post content using OpenAI
-def generate_post_content():
-    response = MetaAI().prompt(message="Whats the weather in San Francisco today? And what is the date?")
-    return response["message"]
+	# Send the POST request
+	response = requests.post(url, json=payload, headers=headers)
 
-    # genai.configure(api_key=f"{GOOGLE_API_KEY}")
-    # model = genai.GenerativeModel("gemini-1.5-flash")
-    # response = model.generate_content("Generate an engaging LinkedIn post about frontend development or graphic design.")
-    # print(response.text)
-    # return response.text
+	# Check the response
+	if response.status_code == 200:
+		# Parse the JSON response
+		data = response.json()
+		# Extract the text from the first candidate's content
+		return data["candidates"][0]["content"]["parts"][0]["text"]
+	else:
+		print(f"Error {response.status_code}")
 
-
-#     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-#     payload = {
-#         "model": "gpt-3.5-turbo-instruct",
-#         "prompt": "Generate an engaging LinkedIn post about frontend development or graphic design.",
-#         "max_tokens": 300,
-#         "temperature": 0.7,
-#     }
-#     response = requests.post(f"{OPENAI_API_URL}/completions", headers=headers, json=payload)
-#     response.raise_for_status()
-#     return response.json()["choices"][0]["text"].strip()
-
-
-# Function to generate an image using OpenAI
-def generate_image(prompt):
-    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-    payload = {"prompt": prompt, "n": 1, "size": "1024x1024"}
-    response = requests.post(f"{OPENAI_API_URL}/images/generations", headers=headers, json=payload)
-    response.raise_for_status()
-    image_url = response.json()["data"][0]["url"]
-
-    # Download image
-    image_response = requests.get(image_url)
-    image_response.raise_for_status()
-    return BytesIO(image_response.content)
-
-# Function to post on LinkedIn
-def post_to_linkedin(content, image_path):
+def get_linkedin_userinfo(access_token):
+    url = "https://api.linkedin.com/v2/userinfo"
     headers = {
-        "Authorization": f"Bearer {LINKEDIN_ACCESS_TOKEN}",
-        "Content-Type": "application/json"
+        'Authorization': f'Bearer {access_token}'
     }
+    
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        user_data = response.json()
+        return user_data
+    else:
+        print(f"Error fetching user info: {response.status_code}")
+        return None
+
+def get_linkedin_urn(access_token):
+    url = "https://api.linkedin.com/v2/me"
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        profile_data = response.json()
+        return profile_data.get('id')  # Ensure this returns the ID
+    else:
+        print(f"Error fetching LinkedIn URN: {response.status_code}")
+        return None
+
+
+def post_to_linkedin(access_token, text_content):
+    user_data = get_linkedin_userinfo(access_token)
+    if not user_data or 'sub' not in user_data:
+        print("Failed to retrieve user data.")
+        return
+    
+    member_id = user_data['sub']    
+    url = "https://api.linkedin.com/v2/ugcPosts"
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0'
+    }
+    
     payload = {
-        "author": f"urn:li:person:{LINKEDIN_USER_ID}",
+        "author": f"urn:li:person:{member_id}",  # Note the 'person' instead of 'member'
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
-                "shareCommentary": {"text": content},
-                "shareMediaCategory": "IMAGE",
-                "media": [
-                    {
-                        "status": "READY",
-                        "originalUrl": image_path,
-                    }
-                ]
+                "shareCommentary": {
+                    "text": text_content
+                },
+                "shareMediaCategory": "NONE"
             }
         },
-        "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
+        "visibility": {
+            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+        }
     }
-    response = requests.post(LINKEDIN_API_URL, headers=headers, json=payload)
-    response.raise_for_status()
-    return response.status_code == 201
+    
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code == 201:
+        print("Successfully posted to LinkedIn!")
+        return response.json()
+    else:
+        print(f"Error posting to LinkedIn: {response.status_code}")
+        return None
 
-# Function to notify via email
-def send_email_notification():
-    # Use a library like smtplib or another service to send an email notification
-    print(f"Notification sent to {NOTIFICATION_EMAIL}")
 
+# Main execution
 def main():
-    try:
-        print("Generating content with OpenAI...")
-        content = generate_post_content()
-        print("Generating image...")
-        image = generate_image(content)
-
-        # Save image locally
-        image_path = "generated_image.png"
-        with open(image_path, "wb") as f:
-            f.write(image.getbuffer())
-
-        print("Posting to LinkedIn...")
-        success = post_to_linkedin(content, image_path)
-
-        if success:
-            print("Posted successfully!")
-            send_email_notification()
-        else:
-            print("Failed to post.")
-    except Exception as e:
-        print(f"Error: {e}")
+    text_content = get_ai_data("What is the meaning of life?")
+    result = post_to_linkedin(ACCESS_TOKEN, text_content)
+    if result:
+        print("Post successful!")
+    else:
+        print("Failed to post.")
 
 if __name__ == "__main__":
     main()
