@@ -29,5 +29,5 @@ jobs:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
           LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
-          PROMPT: ${{ env.PROMPT }}
+          PROMPT: ${{ secrets.PROMPT }}
           NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
