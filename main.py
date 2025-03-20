@@ -109,7 +109,7 @@ def post_to_linkedin(access_token, text_content):
 
 # Main execution
 def main():
-    text_content = "Helloooooo"
+    text_content = get_ai_data(PROMPT)
     result = post_to_linkedin(ACCESS_TOKEN, text_content)
     if result:
         print("Post successful!")
