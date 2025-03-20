@@ -1,11 +1,11 @@
 import os
 import requests
 
-PROMPT = os.environ.get("PROMPT")
-API_KEY = os.environ.get('GOOGLE_API_KEY')
-CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET')
-ACCESS_TOKEN = os.environ.get('LINKEDIN_ACCESS_TOKEN')
+PROMPT = f"{os.environ.get('PROMPT')}"
+API_KEY = f"{os.environ.get('GOOGLE_API_KEY')}"
+CLIENT_ID = f"{os.environ.get('LINKEDIN_CLIENT_ID')}"
+CLIENT_SECRET = f"{os.environ.get('LINKEDIN_CLIENT_SECRET')}"
+ACCESS_TOKEN = f"{os.environ.get('LINKEDIN_ACCESS_TOKEN')}"
 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 
 def get_ai_data(prompt):
@@ -103,6 +103,7 @@ def post_to_linkedin(access_token, text_content):
         return response.json()
     else:
         print(f"Error posting to LinkedIn: {response.status_code}")
+	print(response.text)
         return None
 
 
