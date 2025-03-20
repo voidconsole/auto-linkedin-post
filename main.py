@@ -8,6 +8,7 @@ CLIENT_SECRET = f"{os.environ.get('LINKEDIN_CLIENT_SECRET')}"
 ACCESS_TOKEN = f"{os.environ.get('LINKEDIN_ACCESS_TOKEN')}"
 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 
+print(f"prompt:{PROMPT}")
 def get_ai_data(prompt):
 	payload = {
 	"contents": [
@@ -108,7 +109,7 @@ def post_to_linkedin(access_token, text_content):
 
 # Main execution
 def main():
-    text_content = get_ai_data("What is the meaning of life?")
+    text_content = get_ai_data(PROMPT)
     result = post_to_linkedin(ACCESS_TOKEN, text_content)
     if result:
         print("Post successful!")
