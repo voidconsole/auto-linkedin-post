@@ -103,7 +103,7 @@ def post_to_linkedin(access_token, text_content):
         return response.json()
     else:
         print(f"Error posting to LinkedIn: {response.status_code}")
-	print(response.text)
+        print(response.text)
         return None
 
 
