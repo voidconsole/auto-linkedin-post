@@ -1,7 +1,7 @@
 import os
 import requests
 
-PROMPT = "What is a superconductor"
+PROMPT = os.environ.get("PROMPT")
 API_KEY = os.environ.get('GOOGLE_API_KEY')
 CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET')
@@ -103,12 +103,13 @@ def post_to_linkedin(access_token, text_content):
         return response.json()
     else:
         print(f"Error posting to LinkedIn: {response.status_code}")
+	print(response.text)
         return None
 
 
 # Main execution
 def main():
-    text_content = get_ai_data("Helloooo")
+    text_content = get_ai_data(PROMPT)
     result = post_to_linkedin(ACCESS_TOKEN, text_content)
     if result:
         print("Post successful!")
