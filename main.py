@@ -1,11 +1,12 @@
 import os
 import requests
 
-PROMPT = f"{os.environ.get('PROMPT')}"
-API_KEY = f"{os.environ.get('GOOGLE_API_KEY')}"
-CLIENT_ID = f"{os.environ.get('LINKEDIN_CLIENT_ID')}"
-CLIENT_SECRET = f"{os.environ.get('LINKEDIN_CLIENT_SECRET')}"
-ACCESS_TOKEN = f"{os.environ.get('LINKEDIN_ACCESS_TOKEN')}"
+PROMPT = os.environ.get('PROMPT')
+API_KEY = os.environ.get('GOOGLE_API_KEY')
+CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET')
+ACCESS_TOKEN = os.environ.get('LINKEDIN_ACCESS_TOKEN')
+
 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 
 print(f"prompt:{PROMPT}")
