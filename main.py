@@ -14,7 +14,7 @@ def get_ai_data(prompt):
 		{
 		"parts": [
 			{
-			"text":  prompt
+			"text": prompt
 			}
 		]
 		}
@@ -82,7 +82,7 @@ def post_to_linkedin(access_token, text_content):
     }
     
     payload = {
-        "author": f"urn:li:person:{member_id}",  # Note the 'person' instead of 'member'
+        "author": f"urn:li:person:{member_id}",  
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
@@ -103,7 +103,6 @@ def post_to_linkedin(access_token, text_content):
         return response.json()
     else:
         print(f"Error posting to LinkedIn: {response.status_code}")
-        print(response.text)
         return None
 
 
