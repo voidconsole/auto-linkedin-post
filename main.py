@@ -20,19 +20,19 @@ def get_ai_data(prompt):
 		}
 	]
 	}
-	# Headers
+	
 	headers = {
 	"Content-Type": "application/json"
 	}
 
-	# Send the POST request
+	
 	response = requests.post(url, json=payload, headers=headers)
 
-	# Check the response
+	
 	if response.status_code == 200:
-		# Parse the JSON response
+		
 		data = response.json()
-		# Extract the text from the first candidate's content
+		
 		return data["candidates"][0]["content"]["parts"][0]["text"]
 	else:
 		print(f"Error {response.status_code}")
@@ -61,7 +61,7 @@ def get_linkedin_urn(access_token):
 
     if response.status_code == 200:
         profile_data = response.json()
-        return profile_data.get('id')  # Ensure this returns the ID
+        return profile_data.get('id')  
     else:
         print(f"Error fetching LinkedIn URN: {response.status_code}")
         return None
@@ -107,7 +107,7 @@ def post_to_linkedin(access_token, text_content):
         return None
 
 
-# Main execution
+
 def main():
     text_content = get_ai_data(PROMPT)
     result = post_to_linkedin(ACCESS_TOKEN, text_content)
