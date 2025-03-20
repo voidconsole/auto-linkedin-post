@@ -1,4 +1,2 @@
-google.generativeai
-openai
 requests
 Pillow
