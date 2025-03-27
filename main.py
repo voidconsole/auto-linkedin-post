@@ -1,5 +1,6 @@
 import os
 import requests
+import random
 
 PROMPT = f"{os.environ.get('PROMPT')}"
 API_KEY = f"{os.environ.get('GOOGLE_API_KEY')}"
