@@ -106,15 +106,23 @@ def post_to_linkedin(access_token, text_content):
         print(response.text)
         return None
 
+import random
 
+def should_post():
+    # 2 posts out of 12 attempts (twice a day)
+    return random.randint(1, 12) <= 2
 
 def main():
-    text_content = get_ai_data(PROMPT)
-    result = post_to_linkedin(ACCESS_TOKEN, text_content)
-    if result:
-        print("Post successful!")
+    if should_post():
+        print("Proceeding to post on LinkedIn...")
+	    text_content = get_ai_data(PROMPT)
+	    result = post_to_linkedin(ACCESS_TOKEN, text_content)
+	    if result:
+	        print("Post successful!")
+	    else:
+	        print("Failed to post.")
     else:
-        print("Failed to post.")
-
+        print("Skipping this run. Will try again later.")
+	    
 if __name__ == "__main__":
     main()
