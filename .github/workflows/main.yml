@@ -1,41 +1,12 @@
 name: Schedule LinkedIn Post
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 4 * * *" # Auto-generated 1
-    - cron: "0 12 * * *" # Auto-generated 2
+      - cron: "0 4-16 * * *"
+  workflow_dispatch:
 
 jobs:
-  update-cron:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-
-      - name: Generate Random Cron Times
-        run: |
-          hour1=$((4 + RANDOM % 13))
-          hour2=$((4 + RANDOM % 13))
-          while [ "$hour1" -eq "$hour2" ]; do
-            hour2=$((4 + RANDOM % 13))
-          done
-          minute1=$((15 * (RANDOM % 4)))
-          minute2=$((15 * (RANDOM % 4)))
-          echo "Generated Times: $hour1:$minute1 and $hour2:$minute2 UTC"
-          sed -i "s|cron: .* # Auto-generated 1|cron: \"$minute1 $hour1 * * *\" # Auto-generated 1|" .github/workflows/main.yml
-          sed -i "s|cron: .* # Auto-generated 2|cron: \"$minute2 $hour2 * * *\" # Auto-generated 2|" .github/workflows/main.yml
-
-      - name: Commit Changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/main.yml
-          git commit -m "Update cron with random times"
-          git push
-
   post-to-linkedin:
-    needs: update-cron
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -44,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12"
+          python-version: "3.12"  # Match your script's version
 
       - name: Install dependencies
         run: |
