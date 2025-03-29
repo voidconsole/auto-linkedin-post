@@ -1,6 +1,8 @@
 import os
 import requests
 import random
+import tweepy
+
 
 PROMPT = os.environ.get('PROMPT', '')
 API_KEY = os.environ.get('GOOGLE_API_KEY', '')
@@ -8,6 +10,11 @@ CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID', '')
 CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET', '')
 ACCESS_TOKEN = os.environ.get('LINKEDIN_ACCESS_TOKEN', '')
 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
+bearer_token = os.environ.get('X_BEARER_TOKEN', '')
+consumer_key = os.environ.get('X_API_KEY', '')
+consumer_secret = os.environ.get('X_API_SECRET', '')
+access_token = os.environ.get('X_ACCESS_TOKEN', '')
+access_token_secret = os.environ.get('X_ACCESS_SECRET', '')
 
 def get_ai_data(prompt):
     payload = {
@@ -100,6 +107,21 @@ def post_to_linkedin(access_token, text_content):
         print(f"Error posting to LinkedIn: {response.status_code}")
         print(response.text)
         return None
+def post_tweet(text):    
+    # Initialize client with credentials (Twitter API v2)
+    client = tweepy.Client(
+        bearer_token=bearer_token,
+        consumer_key=consumer_key,
+        consumer_secret=consumer_secret,
+        access_token=access_token,
+        access_token_secret=access_token_secret
+    )
+    
+    # Post the tweet
+    response = client.create_tweet(text=text)
+    print(f"Tweet posted successfully!")
+    return response
+
 
 def should_post():
     # 2 posts out of 12 attempts (twice a day)
@@ -111,11 +133,14 @@ def main():
         text_content = get_ai_data(PROMPT)
         result = post_to_linkedin(ACCESS_TOKEN, text_content)
         if result:
-            print("Post successful!")
+            print("Post to linkedin successful!")
         else:
-            print("Failed to post.")
+            print("Failed to post to linkedin.")
     else:
+        tweet_text = get_ai_data(PROMPT_X)
+        resultX = post_tweet(tweet_text)
         print("Skipping this run. Will try again later.")
+    
 
 if __name__ == "__main__":
     main()
