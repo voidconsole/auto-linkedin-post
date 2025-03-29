@@ -5,6 +5,7 @@ import tweepy
 
 
 PROMPT = os.environ.get('PROMPT', '')
+PROMPT_X = os.environ.get('PROMPT_X', '')
 API_KEY = os.environ.get('GOOGLE_API_KEY', '')
 CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID', '')
 CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET', '')
