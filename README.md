@@ -1,49 +1,157 @@
-# 🚀 LinkedIn AutoPost: Cronify Your Content
+# 🚀 AutoPost: Cronify Your Content
 
-LinkedIn AutoPost is a powerful automation tool that randomly schedules and posts content on your LinkedIn profile using GitHub Actions. It generates dynamic cron jobs to ensure unpredictable and authentic-looking post timings.
-
-## ✨ Features
-- ✅ **Randomized Scheduling**: Posts twice daily at unpredictable times within a 10 AM to 10 PM IST window.
-- ✅ **OAuth2 Authentication**: Secure LinkedIn API integration.
-- ✅ **Automated Content Posting**: Post directly to LinkedIn using your personalized prompts.
-- ✅ **Seamless Integration**: Managed entirely through GitHub Actions.
-
-## 🛠️ Prerequisites
-Ensure you have the following set up:
-- Python 3.12
-- LinkedIn Developer Account with API access
-- GitHub Repository
-- GitHub Secrets for storing API credentials
-
-## 🔑 Environment Variables
-Set the following secrets in your repository:
-- `GOOGLE_API_KEY` — For any external AI services (if applicable)
-- `LINKEDIN_ACCESS_TOKEN` — Your LinkedIn access token
-- `LINKEDIN_CLIENT_ID` — Your LinkedIn client ID
-- `LINKEDIN_CLIENT_SECRET` — Your LinkedIn client secret
-- `PROMPT` — Custom prompt for generating content
-- `NOTIFICATION_EMAIL` — Email for notifications
-
-## 🚦 How It Works
-1. **Random Cron Generation**: The workflow uses a Bash script to generate random UTC times between 4 AM and 4 PM (matching your 10 AM to 10 PM IST window).
-2. **GitHub Actions**: Commits and updates the `.github/workflows/main.yml` with new cron jobs.
-3. **LinkedIn API Call**: Executes the `main.py` script to generate and post content.
-
-## 🚀 Running the Workflow
-- To trigger the workflow manually, navigate to your GitHub Actions tab and click **Run Workflow**.
-- To schedule automatically, the cron will handle it at the generated times.
-
-## 📧 Notifications
-You can receive email notifications about your posts using the `NOTIFICATION_EMAIL` secret. Alternatively, you could expand this by integrating Gmail or other notification services.
-
-## 🛡️ Security
-- Store all sensitive information in GitHub Secrets.
-- Avoid storing API keys directly in your code.
-
-## 🌿 Future Improvements
-- Add AI-powered content generation.
-- Support for multiple LinkedIn accounts.
-- Improved logging and error handling.
+**AutoPost** is a powerful automation tool that brings life to your LinkedIn profile—without you lifting a finger. Using GitHub Actions, it schedules and publishes dynamic, human-like posts directly to LinkedIn and Twitter. The magic? It runs hourly at `:47` (because no human posts on the hour, right?) and picks two random hours daily for actual LinkedIn content. All other times, your thoughts go to Twitter. Genius? Slightly.
 
 ---
-**LinkedIn AutoPost - Because even bots need a personal brand.**
+
+## ✨ Features
+
+* ✅ **Human-Like Posting Times**: Runs hourly at `:47` and posts **twice a day** to LinkedIn at random hours (within 10 AM to 10 PM IST).
+* ✅ **Fallback to Twitter**: Every other run posts to Twitter instead—keeping your brand alive and buzzing across platforms.
+* ✅ **OAuth2 Authentication**: Secure LinkedIn API integration.
+* ✅ **AI-Powered Content Generation**: Uses a custom prompt to generate text via the Gemini API.
+* ✅ **Seamless Automation**: Managed fully by GitHub Actions—set it and forget it.
+
+---
+
+## ⏰ How It Works
+
+1. **Hourly Cron**: A GitHub Actions workflow runs every hour at `:47` UTC.
+2. **Smart Random Logic**:
+
+   * **2 out of 12 runs per day** (randomized) are selected to post on LinkedIn.
+   * **Other 10 runs** default to Twitter.
+3. **AI Content**: A Google Gemini model (via API key) is queried with your custom `PROMPT` or `PROMPT_X` to generate platform-specific posts.
+4. **LinkedIn Posts**:
+
+   * Posted via the `ugcPosts` endpoint using your personal URN.
+   * Public visibility.
+5. **Twitter Posts**:
+
+   * Posted via Twitter API v2 using Tweepy.
+
+---
+
+## 🛠️ Prerequisites
+
+Before you deploy, make sure you have:
+
+* Python 3.12+
+* A LinkedIn Developer App with access token generation enabled
+* A Twitter Developer App with API v2 access
+* A GitHub repository
+* GitHub Actions enabled
+
+---
+
+## 🔑 Required Secrets
+
+Set these in your GitHub repository's **Settings > Secrets and variables > Actions**:
+
+| Secret Name              | Description                                |
+| ------------------------ | ------------------------------------------ |
+| `GOOGLE_API_KEY`         | Gemini AI API key (for content generation) |
+| `LINKEDIN_ACCESS_TOKEN`  | LinkedIn OAuth2 access token               |
+| `LINKEDIN_CLIENT_ID`     | LinkedIn App client ID                     |
+| `LINKEDIN_CLIENT_SECRET` | LinkedIn App client secret                 |
+| `PROMPT`                 | Prompt for LinkedIn post generation        |
+| `PROMPT_X`               | Prompt for Twitter post generation         |
+| `X_BEARER_TOKEN`         | Twitter API bearer token                   |
+| `X_API_KEY`              | Twitter API key                            |
+| `X_API_SECRET`           | Twitter API secret                         |
+| `X_ACCESS_TOKEN`         | Twitter access token                       |
+| `X_ACCESS_SECRET`        | Twitter access token secret                |
+| `NOTIFICATION_EMAIL`     | Optional: Email for notifications          |
+
+---
+
+## 📦 Installation
+
+1. Clone the repo:
+
+```bash
+git clone https://github.com/yourusername/LinkedIn-AutoPost.git
+cd LinkedIn-AutoPost
+```
+
+2. Set your GitHub Secrets as described above.
+3. Ensure the `.github/workflows/main.yml` is present and set to run every hour at `:47`.
+
+```yaml
+schedule:
+  - cron: '47 * * * *'
+```
+
+4. Push and let GitHub Actions take over.
+
+---
+
+## 🧠 Logic Behind the Scenes
+
+* `main.py` contains the decision tree:
+
+  * Every hour it checks if it's one of the 2 lucky LinkedIn posting hours.
+  * If yes, it posts to LinkedIn using Gemini-generated content.
+  * If not, it posts to Twitter using a separate prompt and set of API keys.
+
+This mimics natural, non-robotic behavior—perfect for building trust with your audience.
+
+---
+
+## 📧 Notifications (Optional)
+
+You can optionally integrate Gmail or other services using the `NOTIFICATION_EMAIL` secret for updates after each post. This is currently a placeholder for future extensions.
+
+---
+
+## 🛡️ Security
+
+* All tokens and secrets are stored in **GitHub Secrets**.
+* Avoid hardcoding credentials.
+* Logs only show non-sensitive data.
+
+---
+
+## 🌿 Future Improvements
+
+* [ ] Image + media support
+* [ ] Auto-refresh for expired LinkedIn tokens
+* [ ] Enhanced scheduling UI via GitHub Actions Dispatch
+* [ ] Email summaries of posts made
+* [ ] Post analytics
+
+---
+
+## 💬 Sample AI Prompts
+
+**LinkedIn Prompt** (`PROMPT`):
+
+```
+Write a professional, yet engaging post on emerging AI trends in 2025 for a tech-savvy audience.
+```
+
+**Twitter Prompt** (`PROMPT_X`):
+
+```
+Tweet a witty and insightful one-liner about how AI is rewriting the rules of productivity in 2025.
+```
+
+---
+
+## 🔁 Manual Trigger
+
+Want to test manually? Go to **GitHub > Actions > Run workflow** and manually trigger the cron workflow.
+
+---
+
+## 🧠 Philosophy
+
+> "Even bots need a personal brand."
+
+This project doesn’t just automate posts—it mimics the unpredictability and style of human behavior. Build trust. Stay active. And do it while you sleep.
+
+---
+
+## 🤖 Author
+
+**Built with ❤️ by [Satwik Bhusanur](https://github.com/voidconsole)**
