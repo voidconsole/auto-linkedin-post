@@ -10,7 +10,7 @@ API_KEY = os.environ.get('GOOGLE_API_KEY', '')
 CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID', '')
 CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET', '')
 ACCESS_TOKEN = os.environ.get('LINKEDIN_ACCESS_TOKEN', '')
-url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
+url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key={API_KEY}"
 bearer_token = os.environ.get('X_BEARER_TOKEN', '')
 consumer_key = os.environ.get('X_API_KEY', '')
 consumer_secret = os.environ.get('X_API_SECRET', '')
