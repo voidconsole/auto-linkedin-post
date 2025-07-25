@@ -126,7 +126,7 @@ def post_tweet(text):
 
 def should_post():
     # 2 posts out of 12 attempts (twice a day)
-    return random.randint(1, 12) <= 2
+    return random.randint(1, 12) <= 1
 
 def main():
     if should_post():
