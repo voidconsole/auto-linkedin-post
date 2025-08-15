@@ -1,16 +1,16 @@
 # 🚀 AutoPost: Cronify Your Content
 
-**AutoPost** is a powerful automation tool that brings life to your LinkedIn profile—without you lifting a finger. Using GitHub Actions, it schedules and publishes dynamic, human-like posts directly to LinkedIn and Twitter. The magic? It runs hourly at `:47` (because no human posts on the hour, right?) and picks two random hours daily for actual LinkedIn content. All other times, your thoughts go to Twitter. Genius? Slightly.
+**AutoPost** is a powerful automation tool that brings life to your LinkedIn profile, without you lifting a finger. Using GitHub Actions, it schedules and publishes dynamic, human-like posts directly to LinkedIn and Twitter. The magic? It runs hourly at `:47` (because no human posts on the hour, right?) and picks two random hours daily for actual LinkedIn content. All other times, your thoughts go to Twitter. Genius? Slightly.
 
 ---
 
 ## ✨ Features
 
 * ✅ **Human-Like Posting Times**: Runs hourly at `:47` and posts **twice a day** to LinkedIn at random hours (within 10 AM to 10 PM IST).
-* ✅ **Fallback to Twitter**: Every other run posts to Twitter instead—keeping your brand alive and buzzing across platforms.
+* ✅ **Fallback to Twitter**: Every other run posts to Twitter instead, keeping your brand alive and buzzing across platforms.
 * ✅ **OAuth2 Authentication**: Secure LinkedIn API integration.
 * ✅ **AI-Powered Content Generation**: Uses a custom prompt to generate text via the Gemini API.
-* ✅ **Seamless Automation**: Managed fully by GitHub Actions—set it and forget it.
+* ✅ **Seamless Automation**: Managed fully by GitHub Actions; set it and forget it.
 
 ---
 
@@ -94,7 +94,7 @@ schedule:
   * If yes, it posts to LinkedIn using Gemini-generated content.
   * If not, it posts to Twitter using a separate prompt and set of API keys.
 
-This mimics natural, non-robotic behavior—perfect for building trust with your audience.
+This mimics natural, non-robotic behavior; perfect for building trust with your audience.
 
 ---
 
@@ -148,7 +148,7 @@ Want to test manually? Go to **GitHub > Actions > Run workflow** and manually tr
 
 > "Even bots need a personal brand."
 
-This project doesn’t just automate posts—it mimics the unpredictability and style of human behavior. Build trust. Stay active. And do it while you sleep.
+This project doesn’t just automate posts; it mimics the unpredictability and style of human behavior. Build trust. Stay active. And do it while you sleep.
 
 ---
 
