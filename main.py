@@ -19,8 +19,8 @@ access_token_secret = os.environ.get('X_ACCESS_SECRET', '')
 def get_ai_data(prompt):
     client = genai.Client(api_key=API_KEY)
     response = client.models.generate_content(
-        model="gemini-2.5-pro",  # Or whatever model you prefer
-        contents=prompt
+    model = "gemini-2.5-flash",  # Or whatever model you prefer
+        contents = prompt
     )
     return response.text
 
