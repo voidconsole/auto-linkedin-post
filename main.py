@@ -2,7 +2,7 @@ import os
 import requests
 import random
 import tweepy
-
+from google import genai
 
 PROMPT = os.environ.get('PROMPT', '')
 PROMPT_X = os.environ.get('PROMPT_X', '')
@@ -10,7 +10,6 @@ API_KEY = os.environ.get('GOOGLE_API_KEY', '')
 CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID', '')
 CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET', '')
 ACCESS_TOKEN = os.environ.get('LINKEDIN_ACCESS_TOKEN', '')
-url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key={API_KEY}"
 bearer_token = os.environ.get('X_BEARER_TOKEN', '')
 consumer_key = os.environ.get('X_API_KEY', '')
 consumer_secret = os.environ.get('X_API_SECRET', '')
@@ -18,29 +17,12 @@ access_token = os.environ.get('X_ACCESS_TOKEN', '')
 access_token_secret = os.environ.get('X_ACCESS_SECRET', '')
 
 def get_ai_data(prompt):
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "text": prompt
-                    }
-                ]
-            }
-        ]
-    }
-
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    response = requests.post(url, json=payload, headers=headers)
-
-    if response.status_code == 200:
-        data = response.json()
-        return data["candidates"][0]["content"]["parts"][0]["text"]
-    else:
-        print(f"Error {response.status_code}")
+    client = genai.Client(api_key=API_KEY)
+    response = client.models.generate_content(
+        model="gemini-2.5-pro",  # Or whatever model you prefer
+        contents=prompt
+    )
+    return response.text
 
 def get_linkedin_userinfo(access_token):
     url = "https://api.linkedin.com/v2/userinfo"
@@ -108,6 +90,7 @@ def post_to_linkedin(access_token, text_content):
         print(f"Error posting to LinkedIn: {response.status_code}")
         print(response.text)
         return None
+
 def post_tweet(text):    
     # Initialize client with credentials (Twitter API v2)
     client = tweepy.Client(
