@@ -1,3 +1,4 @@
 requests
 Pillow
 tweepy
+google-genai
