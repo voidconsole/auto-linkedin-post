@@ -1,4 +1,4 @@
-name: Schedule LinkedIn Post
+name: Post
 
 on:
   schedule:
