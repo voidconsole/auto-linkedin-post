@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  post-to-linkedin:
+  run-autopost:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
