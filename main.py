@@ -123,7 +123,7 @@ def main():
     else:
         tweet_text = get_ai_data(PROMPT_X)
         resultX = post_tweet(tweet_text)
-        print("Skipping this run. Will try again later.")
+        print("Tweeted this run. Will try linkedin again later.")
     
 
 if __name__ == "__main__":
