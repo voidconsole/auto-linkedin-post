@@ -61,7 +61,6 @@ Set these in your GitHub repository's **Settings > Secrets and variables > Actio
 | `X_API_SECRET`           | Twitter API secret                         |
 | `X_ACCESS_TOKEN`         | Twitter access token                       |
 | `X_ACCESS_SECRET`        | Twitter access token secret                |
-| `NOTIFICATION_EMAIL`     | Optional: Email for notifications          |
 
 ---
 
