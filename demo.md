@@ -4,6 +4,7 @@ https://github.com/user-attachments/assets/6f814d56-9ff2-4623-ade9-7662495acb43
 # To use the automation
 If you read the [readme.md](https://github.com/voidconsole/autopost/tree/6c31a7472e37f99e4806f71f7ea4f6d156915286) (and do read it :P), it should be pretty clear. Just fork the repo, get the API keys, put them in the Settings > Secrets and Variables > Actions. Tweak the parameters of the code if you wish. 
 And that's pretty much it, just wait for the magic to happen, or run it yourself manually in Actions > Post > Run Workflow.
+If you want to quickly test if this works, try the keys from [here](https://github.com/voidconsole/autopost/blob/804ba434d24a39d08646d859725fd92dc6a66aae/testkeys.md).
 
 # To set the API keys
 Now this is a one time effort to set up the automation, and you need to set-up the following accounts and keys(free!):
