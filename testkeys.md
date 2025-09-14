@@ -1,7 +1,7 @@
 ## Here are the required keys and account details for testing this project.
 Google Account (for X, Linkedin, and Google Cloud):
-loremipsum314159265@gmail.com
-DIMENSIONLESS
+EMAIL: loremipsum314159265@gmail.com
+PASSWORD: DIMENSIONLESS
 
 | Secret Name              | Description                                |
 | ------------------------ | ------------------------------------------ | 
