@@ -25,3 +25,7 @@ Don't worry, since this happens in your personal github, no one but you can see 
 | `X_ACCESS_SECRET`        | Twitter access token secret                | Just as in last step, find it in "Keys and Tokens".
 
 Once you set this, you're good to go! Watch the automation grow your profile by posting consistently, written to your will. 
+
+# Working demo
+https://github.com/user-attachments/assets/671f0f8c-11fa-4b76-b8c1-0771122f4f06
+Here you can see it runs when manually run, and whilst I was testing, you also see it running on the scheduled time.
