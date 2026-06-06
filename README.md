@@ -1,156 +1,189 @@
-# 🚀 AutoPost: Cronify Your Content
+# AutoPost
 
-**AutoPost** is a powerful automation tool that brings life to your LinkedIn profile, without you lifting a finger. Using GitHub Actions, it schedules and publishes dynamic, human-like posts directly to LinkedIn and Twitter. The magic? It runs hourly at `:47` (because no human posts on the hour, right?) and picks two random hours daily for actual LinkedIn content. All other times, your thoughts go to Twitter. Genius? Slightly.
+A weird little automation project that lets AI run your social media accounts.
 
----
+This started as an experiment with GitHub Actions, LinkedIn APIs, prompt engineering, and posting behavior. The system runs entirely in the cloud and automatically generates + publishes content to LinkedIn and Twitter/X without any manual interaction.
 
-## ✨ Features
+It was mainly built to answer a question:
 
-* ✅ **Human-Like Posting Times**: Runs hourly at `:47` and posts **twice a day** to LinkedIn at random hours (within 10 AM to 10 PM IST).
-* ✅ **Fallback to Twitter**: Every other run posts to Twitter instead, keeping your brand alive and buzzing across platforms.
-* ✅ **OAuth2 Authentication**: Secure LinkedIn API integration.
-* ✅ **AI-Powered Content Generation**: Uses a custom prompt to generate text via the Gemini API.
-* ✅ **Seamless Automation**: Managed fully by GitHub Actions; set it and forget it.
+> Can AI convincingly fake an active intellectual online presence?
 
----
+Turns out: not really.
 
-## ⏰ How It Works
-
-1. **Hourly Cron**: A GitHub Actions workflow runs every hour at `:47` UTC.
-2. **Smart Random Logic**:
-
-   * **2 out of 12 runs per day** (randomized) are selected to post on LinkedIn.
-   * **Other 10 runs** default to Twitter.
-3. **AI Content**: A Google Gemini model (via API key) is queried with your custom `PROMPT` or `PROMPT_X` to generate platform-specific posts.
-4. **LinkedIn Posts**:
-
-   * Posted via the `ugcPosts` endpoint using your personal URN.
-   * Public visibility.
-5. **Twitter Posts**:
-
-   * Posted via Twitter API v2 using Tweepy.
+But the infrastructure was fun to build.
 
 ---
 
-## 🛠️ Prerequisites
+# What It Does
 
-Before you deploy, make sure you have:
+* Runs hourly using GitHub Actions
+* Executes at `:47` every hour because posting exactly on the hour looks robotic
+* Randomly selects 2 posting slots per day for LinkedIn
+* All remaining runs post to Twitter/X
+* Generates content using Gemini
+* Uses different prompts for LinkedIn and Twitter
+* Posts automatically through platform APIs
 
-* Python 3.12+
-* A LinkedIn Developer App with access token generation enabled
-* A Twitter Developer App with API v2 access
-* A GitHub repository
-* GitHub Actions enabled
-
----
-
-## 🔑 Required Secrets
-
-Set these in your GitHub repository's **Settings > Secrets and variables > Actions**:
-
-| Secret Name              | Description                                |
-| ------------------------ | ------------------------------------------ |
-| `GOOGLE_API_KEY`         | Gemini AI API key (for content generation) |
-| `LINKEDIN_ACCESS_TOKEN`  | LinkedIn OAuth2 access token               |
-| `LINKEDIN_CLIENT_ID`     | LinkedIn App client ID                     |
-| `LINKEDIN_CLIENT_SECRET` | LinkedIn App client secret                 |
-| `PROMPT`                 | Prompt for LinkedIn post generation        |
-| `PROMPT_X`               | Prompt for Twitter post generation         |
-| `X_BEARER_TOKEN`         | Twitter API bearer token                   |
-| `X_API_KEY`              | Twitter API key                            |
-| `X_API_SECRET`           | Twitter API secret                         |
-| `X_ACCESS_TOKEN`         | Twitter access token                       |
-| `X_ACCESS_SECRET`        | Twitter access token secret                |
+Once configured, it just keeps running.
 
 ---
 
-## 📦 Installation
+# Stack
 
-1. Clone the repo:
+* Python
+* GitHub Actions
+* Google Gemini API
+* LinkedIn API
+* Twitter/X API v2
+* Tweepy
 
-```bash
-git clone https://github.com/yourusername/LinkedIn-AutoPost.git
-cd LinkedIn-AutoPost
-```
+---
 
-2. Set your GitHub Secrets as described above.
-3. Ensure the `.github/workflows/main.yml` is present and set to run every hour at `:47`.
+# How The Scheduling Works
+
+The GitHub Actions workflow runs every hour:
 
 ```yaml
 schedule:
   - cron: '47 * * * *'
 ```
 
-4. Push and let GitHub Actions take over.
+Each run checks whether the current hour is one of the randomly selected LinkedIn slots for that day.
+
+* If yes → generate and publish a LinkedIn post
+* If not → generate and publish a Twitter/X post
+
+The randomization exists purely to avoid obvious automation patterns.
 
 ---
 
-## 🧠 Logic Behind the Scenes
+# Prompt Engineering
 
-* `main.py` contains the decision tree:
+The prompts ended up becoming more complicated than the actual infrastructure.
 
-  * Every hour it checks if it's one of the 2 lucky LinkedIn posting hours.
-  * If yes, it posts to LinkedIn using Gemini-generated content.
-  * If not, it posts to Twitter using a separate prompt and set of API keys.
+The system uses:
 
-This mimics natural, non-robotic behavior; perfect for building trust with your audience.
+* tone constraints
+* formatting instructions
+* topic control
+* hook structures
+* CTA patterns
+* platform-specific writing styles
 
----
+LinkedIn and Twitter use completely separate prompts.
 
-## 📧 Notifications (Optional)
+The goal was to make the generated posts sound:
 
-You can optionally integrate Gmail or other services using the `NOTIFICATION_EMAIL` secret for updates after each post. This is currently a placeholder for future extensions.
+* human,
+* slightly intellectual,
+* platform-native,
+* and not obviously AI-generated.
 
----
-
-## 🛡️ Security
-
-* All tokens and secrets are stored in **GitHub Secrets**.
-* Avoid hardcoding credentials.
-* Logs only show non-sensitive data.
-
----
-
-## 🌿 Future Improvements
-
-* [ ] Image + media support
-* [ ] Auto-refresh for expired LinkedIn tokens
-* [ ] Enhanced scheduling UI via GitHub Actions Dispatch
-* [ ] Email summaries of posts made
-* [ ] Post analytics
+It partially worked.
 
 ---
 
-## 💬 Sample AI Prompts
+# Requirements
 
-**LinkedIn Prompt** (`PROMPT`):
+Before running this project, you'll need:
 
+* Python 3.12+
+* GitHub Actions enabled
+* A LinkedIn developer app
+* A Twitter/X developer app
+* Gemini API access
+
+---
+
+# Required GitHub Secrets
+
+Set these under:
+
+`Settings → Secrets and variables → Actions`
+
+| Secret                   | Purpose                     |
+| ------------------------ | --------------------------- |
+| `GOOGLE_API_KEY`         | Gemini API key              |
+| `LINKEDIN_ACCESS_TOKEN`  | LinkedIn OAuth token        |
+| `LINKEDIN_CLIENT_ID`     | LinkedIn app client ID      |
+| `LINKEDIN_CLIENT_SECRET` | LinkedIn app client secret  |
+| `PROMPT`                 | LinkedIn generation prompt  |
+| `PROMPT_X`               | Twitter/X generation prompt |
+| `X_BEARER_TOKEN`         | Twitter/X bearer token      |
+| `X_API_KEY`              | Twitter/X API key           |
+| `X_API_SECRET`           | Twitter/X API secret        |
+| `X_ACCESS_TOKEN`         | Twitter/X access token      |
+| `X_ACCESS_SECRET`        | Twitter/X access secret     |
+
+---
+
+# Setup
+
+Clone the repo:
+
+```bash
+git clone https://github.com/voidconsole/autopost.git
+cd autopost
 ```
-Write a professional, yet engaging post on emerging AI trends in 2025 for a tech-savvy audience.
+
+Configure all required GitHub Secrets.
+
+Then push the workflow and let GitHub Actions handle the rest.
+
+---
+
+# Notes
+
+LinkedIn API setup is painful.
+
+You will create:
+
+* too many tokens,
+* too many apps,
+* too many permissions,
+* and probably question your life choices at least once.
+
+Also:
+LinkedIn access tokens expire, so eventually this thing breaks unless refreshed manually.
+
+---
+
+# Future Ideas
+
+* Media/image support
+* Token auto-refresh
+* Analytics dashboard
+* Better scheduling controls
+* Multi-account support
+* Post history database
+
+---
+
+# Example Prompts
+
+LinkedIn:
+
+```txt
+Write a concise but thoughtful post about emerging AI systems and their effect on human creativity.
 ```
 
-**Twitter Prompt** (`PROMPT_X`):
+Twitter/X:
 
-```
-Tweet a witty and insightful one-liner about how AI is rewriting the rules of productivity in 2025.
+```txt
+Write a short observational one-liner about technology and human behavior.
 ```
 
 ---
 
-## 🔁 Manual Trigger
+# Why This Exists
 
-Want to test manually? Go to **GitHub > Actions > Run workflow** and manually trigger the cron workflow.
+Partly because automation is fun.
 
----
+Partly because I wanted to see whether AI-generated "thought leadership" could blend into real social platforms.
 
-## 🧠 Philosophy
+The results were interesting.
 
-> "Even bots need a personal brand."
+The posts looked polished, but over time they started converging toward the same vague patterns and abstractions.
 
-This project doesn’t just automate posts; it mimics the unpredictability and style of human behavior. Build trust. Stay active. And do it while you sleep.
+Ironically, the automation system itself became more interesting than the content it produced.
 
----
-
-## 🤖 Author
-
-**Built with ❤️ by [Satwik Bhusanur](https://github.com/voidconsole)**
